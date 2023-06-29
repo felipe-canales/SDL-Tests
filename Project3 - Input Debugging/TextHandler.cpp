@@ -1,13 +1,12 @@
 #include "TextHandler.h"
+#include "Renderer.h"
 
-/*const int CHAR_HEIGHT = 8;
-const int CHAR_WIDTH = 6;*/
 const int CHAR_HEIGHT = 16;
 const int CHAR_WIDTH = 12;
 
-TextHandler::TextHandler(SDL_Renderer* ext_renderer)
+TextHandler::TextHandler()
 {
-	renderer = ext_renderer;
+	renderer = Renderer::GetInstance()->GetRenderer();
 	font = IMG_LoadTexture(renderer, "assets/text2.png");
 }
 
@@ -41,6 +40,11 @@ void TextHandler::print(std::string text, int x, int y)
 int TextHandler::get_line_height()
 {
 	return CHAR_HEIGHT;
+}
+
+int TextHandler::get_char_width()
+{
+	return CHAR_WIDTH;
 }
 
 void TextHandler::get_rect_of_char(char c, SDL_Rect* dest)

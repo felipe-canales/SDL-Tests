@@ -1,10 +1,11 @@
 #include "cmath"
 #include "Game.h"
-#include "Console.h"
+#include "InputDebug.h"
+#include "Renderer.h"
 
 void HSV2RGB(int h, float s, float v, int& r, int& g, int& b);
 SDL_Texture* icon;
-Console* console;
+InputDebug* debugger;
 
 Game::Game()
 {
@@ -30,8 +31,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height)
 		return;
 	}
 	std::cout << "Window created" << std::endl;
-	renderer = SDL_CreateRenderer(window, -1, 0);
-	if (!window) {
+	renderer = Renderer::GetInstance(window, -1, 0)->GetRenderer();
+	if (!renderer) {
 		std::cout << "Error to create renderer" << std::endl;
 		is_running = false;
 		return;
@@ -41,9 +42,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height)
 
 	icon = IMG_LoadTexture(renderer, "assets/touhou_suika14.png");
 
-	console = new Console(renderer);
+	debugger = new InputDebug();
 
-	console->print("START");
+	//console->print("START");
 	
 	SDL_JoystickEventState(SDL_ENABLE);
 	SDL_JoystickOpen(0);
@@ -52,8 +53,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height)
 void Game::handle_events()
 {
 	SDL_Event event;
-
-	int mask = 0xFFF0;
 	
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
@@ -71,59 +70,11 @@ void Game::handle_events()
 				delay *= 1.12;
 				std::cout << "-- speed" << delay << std::endl;
 			}
-			console->print("KEYBOARD: Key down");
 			break;
-		case SDL_KEYUP:
-			console->print("KEYBOARD: Key up");
 		default:
-			int offset = event.type - (event.type & mask);
-			if ((event.type & mask) == 0x400) { // Mouse
-				if (offset == 1)
-					console->print("MOUSE: Button down");
-				else if (offset == 2)
-					console->print("MOUSE: Button up");
-				break;
-			}
-			if ((event.type & mask) == 0x600) { // Joystick
-				if (offset == 0 && (event.jaxis.value < -3200) || (event.jaxis.value > 3200))
-					console->print("JOYSTICK: Axis motion");
-				else if (offset == 1)
-					console->print("JOYSTICK: Ball motion");
-				else if (offset == 2)
-					console->print("JOYSTICK: Hat motion");
-				else if (offset == 3)
-					console->print("JOYSTICK: Button down");
-				else if (offset == 4)
-					console->print("JOYSTICK: Button up");
-				break;
-			}
-			if ((event.type & mask) == 0x650) { // Controller
-				if (offset == 0)
-					console->print("CONTROLLER: Axis motion");
-				else if (offset == 1)
-					console->print("CONTROLLER: Button down");
-				else if (offset == 2)
-					console->print("CONTROLLER: Button up");
-				else if (offset == 6)
-					console->print("CONTROLLER: Touchpad down");
-				else if (offset == 7)
-					console->print("CONTROLLER: Touchpad motion");
-				else if (offset == 8)
-					console->print("CONTROLLER: Touchpad up");
-				else if (offset == 9)
-					console->print("CONTROLLER: Sensor update");
-				break;
-			}
-			if ((event.type & mask) == 0x700) { // Touch
-				if (offset == 0)
-					console->print("TOUCH: Finger down");
-				else if (offset == 1)
-					console->print("TOUCH: Finger up");
-				else if (offset == 2)
-					console->print("TOUCH: Finger motion");
-				break;
-			}
+			break;
 		}
+		debugger->log(&event);
 	}
 }
 
@@ -153,7 +104,7 @@ void Game::render()
 
 	SDL_RenderCopy(renderer, icon, NULL, &icon_dest);
 
-	console->render();
+	debugger->render();
 
 	SDL_RenderPresent(renderer);
 

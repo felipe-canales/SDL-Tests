@@ -132,13 +132,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="InputDebug.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="TextHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
     <ClInclude Include="Console.h" />
+    <ClInclude Include="InputDebug.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="TextHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
