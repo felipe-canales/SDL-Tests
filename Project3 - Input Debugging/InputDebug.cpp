@@ -54,10 +54,6 @@ std::string stick(int val)
 		return "RS X";
 	case 3:
 		return "RS Y";
-	case 4:
-		return "LT";
-	case 5:
-		return "RT";
 	}
 }
 
@@ -67,23 +63,27 @@ std::string button(int val)
 	case 0:
 		return "A";
 	case 1:
-		return "B";
+		return "O";
 	case 2:
 		return "X";
 	case 3:
-		return "Y";
+		return "D";
 	case 4:
 		return "LB";
 	case 5:
 		return "RB";
 	case 6:
-		return "SELECT";
+		return "DOWN";
 	case 7:
-		return "START";
+		return "LEFT";
 	case 8:
-		return "LS";
+		return "UP";
 	case 9:
-		return "RS";
+		return "RIGHT";
+	case 10:
+		return "SELECT";
+	case 11:
+		return "START";
 	}
 }
 
